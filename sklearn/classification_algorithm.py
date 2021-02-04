@@ -190,7 +190,7 @@ model_confusion = {}
 print("알고리즘 모델 적용 중")
 for idx, (param, model) in enumerate(zip(params, pipe)) :
     print(f'알고리즘 index : {idx}')
-    search = GridSearchCV(model, param, cv=cv, n_jobs=20) # verbose = ? 
+    search = GridSearchCV(model, param, cv=cv) # verbose = ? 
     search.fit(x_train, y_train)
     y_pred = search.predict(x_test)
     model_result[grid_dict.get(idx)] = f1_score(y_test, y_pred, average='micro')
