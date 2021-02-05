@@ -98,10 +98,10 @@ grid_params_lr = [{'clf__penalty' : ['none', 'l2'],
                    'clf__max_iter' : [10000, 20000] }]
 
 grid_params_rf = [{'clf__criterion' : ['gini', 'entropy'],
-                   'clf__min_samples_leaf' : [0.5, 0.1], 
+                   #'clf__min_samples_leaf' : [3, 2, 1, 0.5, 0.1], 
                    'clf__max_depth' : [5, 6, 7, 8, 9],
-                   'clf__min_samples_split' : [0.5, 0.7, 0.9]}]
-
+                   #'clf__min_samples_split' : [0.5, 0.7, 0.9, 1.0, 2]
+                }]
 grid_params_svm = [{'clf__kernel' : ['linear', 'poly', 'rbf', 'sigmoid'],
                     'clf__C' : [1.0, 0.5, 0.1],
                     'clf__max_iter' : [10000, 20000]}]
@@ -132,7 +132,8 @@ pipe = [
     pipe_qda, pipe_knn, pipe_ridge, 
     pipe_lda, pipe_nb
 ]
-
+""" 
+for test 
 pipe1 = [
     pipe_lr, pipe_svm,
     pipe_knn, pipe_nb
@@ -141,13 +142,14 @@ pipe1 = [
 pipe2 = [
     pipe_rf, pipe_qda, pipe_ridge, pipe_lda
 ]
-
+"""
 params = [
     grid_params_lr, grid_params_rf, grid_params_svm,
     grid_params_qda, grid_params_knn, grid_params_ridge, 
     grid_params_lda, grid_params_nb
 ]
-
+""" 
+for test
 params1 = [
     grid_params_lr, grid_params_svm,
     grid_params_knn, grid_params_nb    
@@ -156,7 +158,7 @@ params1 = [
 params2 = [
     grid_params_rf, grid_params_qda, grid_params_ridge, grid_params_lda
 ]
-
+"""
 
 grid_dict = {0: 'Logistic Regression',
              1: 'Random Forest', 
@@ -167,7 +169,8 @@ grid_dict = {0: 'Logistic Regression',
              6: 'Linear Discriminant Analysis',
              7: 'Naive Bayes'
             }
-
+"""
+for test
 grid_dict1 = {0: 'Logistic Regression',
              1: 'Support Vector Machine',
              2: 'KNNclassifier',
@@ -179,14 +182,9 @@ grid_dict2 = {
     2: 'RidgeCClassifier',
     3: 'Linear Discriminant Anlysis'
 }
-
-model_prob = {}
+"""
 model_result = {}
 model_best_params = {}
-model_confusion = {}
-# plt.style.use('ggplot')
-# fig, ax = plt.subplots(figsize = (20,10))
-# plt.plot([0,1], [0,1], linestyle='--')
 print("알고리즘 모델 적용 중")
 for idx, (param, model) in enumerate(zip(params, pipe)) :
     print(f'알고리즘 index : {idx}')
@@ -199,36 +197,4 @@ for idx, (param, model) in enumerate(zip(params, pipe)) :
 
 print(model_result)
 print(model_best_params)
-"""
-for idx, (param, model) in enumerate(zip(params, pipe)) : 
-    print(f'index : {idx}')
-    search = GridSearchCV(model, param, cv=cv, n_jobs=jobs, verbose=-1)
-    search.fit(x_train, y_train)
-    y_pred = search.predict(x_test)
-    try :
-        y_prob = search.predict_proba(x_test)
-    except Exception as e :
-        pass
-    # rocvis(true=y_test, prob=y_prob[:,1], label = grid_dict.get(idx))
-    # model_result[grid_dict.get(idx)] = roc_auc_score(y_test, y_pred, multi_class='ovo')
-    model_result[grid_dict.get(idx)] = f1_score(y_test, y_pred, average='micro')
-    model_prob[grid_dict.get(idx)] = y_prob
-    model_best_params[grid_dict.get(idx)] = search.best_params_
-    model_confusion[grid_dict.get(idx)] = confusion_matrix(y_test, y_pred)
-'''
-plt.legend(fontsize = 20, loc='center', shadow=True)
-plt.title("Models Roc Curve", fontsize=25)
-plt.savefig("./Model_result.png")
-'''
-output = pd.DataFrame([model_result.keys(), model_result.values()], index=['algo', 'r2']).T
-output.sort_values(["r2"], ascending=False, inplace=True)
-fig, ax = plt.subplots(figsize=(20, 10))
-sns.set(font_scale = 2)
-sns.barplot(y='algo', x='r2', data=output)
-plt.show()
-"""
-# cp = Compare(model_confusion)
-
-
-
 
